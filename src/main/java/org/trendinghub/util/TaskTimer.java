@@ -5,12 +5,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class TaskTimer {
-	
+
 	private static TaskTimer instance;
-	private  final ScheduledExecutorService scheduledService = Executors.newScheduledThreadPool(1);
+	private final ScheduledExecutorService scheduledService = Executors.newScheduledThreadPool(1);
 
 	private TaskTimer() {
 	}
+
 	public static TaskTimer getInstance() {
 		TaskTimer currentInstance;
 		if (instance == null) {
@@ -25,9 +26,11 @@ public class TaskTimer {
 		}
 		return currentInstance;
 	}
-	public void startTaskExecutionEvery(Task task, int hour, int min, int sec) {
+
+	public void startTaskExecutionEvery(Task task, int min) {
 		final Runnable taskWrapper = () -> {
 			task.execute();
+			startTaskExecutionEvery(task, min);
 		};
 		scheduledService.schedule(taskWrapper, min, TimeUnit.MINUTES);
 	}
